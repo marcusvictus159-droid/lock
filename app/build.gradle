@@ -2,12 +2,24 @@ plugins { id 'com.android.application' }
 android {
     namespace 'com.otmar.bloqueo'
     compileSdk 34
+    signingConfigs {
+        fija {
+            storeFile file('bloqueo.jks')
+            storePassword 'bloqueo123'
+            keyAlias 'bloqueo'
+            keyPassword 'bloqueo123'
+        }
+    }
+    buildTypes {
+        debug { signingConfig signingConfigs.fija }
+        release { signingConfig signingConfigs.fija }
+    }
     defaultConfig {
         applicationId "com.otmar.bloqueo"
         minSdk 24
         targetSdk 34
-        versionCode 2
-        versionName "1.1"
+        versionCode 3
+        versionName "1.2"
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
