@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Bloqueo Seguro</string>
     <string name="admin_explicacion">Necesario para bloquear la pantalla y exigir PIN/contraseña en lugar de huella.</string>
+    <string name="ajustes">Ajustes</string>
 </resources>
