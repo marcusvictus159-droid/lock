@@ -4,6 +4,9 @@ on:
   push:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -28,3 +31,11 @@ jobs:
         with:
           name: LinternaShake-apk
           path: app/build/outputs/apk/release/*.apk
+
+      - name: Publicar APK en Releases
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: linterna-v${{ github.run_number }}
+          name: Linterna Shake v${{ github.run_number }}
+          target_commitish: ${{ github.sha }}
+          files: app/build/outputs/apk/release/*.apk
