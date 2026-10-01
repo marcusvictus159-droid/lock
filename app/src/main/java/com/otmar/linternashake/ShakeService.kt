@@ -88,7 +88,27 @@ class ShakeService : Service() {
         return START_STICKY
     }
 
+    /** Al cerrar la app desde "Recientes", algunos teléfonos matan el servicio: lo revivimos. */
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        scheduleRestart()
+        super.onTaskRemoved(rootIntent)
+    }
+
+    private fun scheduleRestart() {
+        if (!Prefs.enabled(this)) return
+        val pi = PendingIntent.getForegroundService(
+            this, 99, Intent(this, ShakeService::class.java),
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        (getSystemService(ALARM_SERVICE) as AlarmManager).setAndAllowWhileIdle(
+            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+            SystemClock.elapsedRealtime() + 1500, pi
+        )
+    }
+
     override fun onDestroy() {
+        // Si el sistema lo mató (y no el usuario con "Desactivar"), se vuelve a iniciar
+        scheduleRestart()
         running = false
         handler.removeCallbacks(autoOff)
         sm.unregisterListener(detector)
